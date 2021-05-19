@@ -34,13 +34,18 @@ const App = () => {
       </View>
     );
   }
+
   if (!currentUser) {
     return <Login setCurrentUser={setCurrentUser} />;
   }
 
   return (
     <View style={styles.container}>
-      <Text> Welcome {currentUser.displayName}</Text>
+      <Text style={styles.message}>
+        {' '}
+        Welcome{' '}
+        {currentUser.isAnonymous ? 'Anonymous' : currentUser.displayName}
+      </Text>
       <Button title={'sign out'} onPress={onSignout}></Button>
     </View>
   );
@@ -52,6 +57,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: 'blue',
+  },
+  message: {
+    margin: 10,
   },
 });
 
