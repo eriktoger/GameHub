@@ -5,6 +5,7 @@ import Login from './Login';
 import firestore from '@react-native-firebase/firestore';
 import {UserInfo} from './UserInfo';
 import AppInfo from './AppInfo';
+import TicTacToe from './TicTacToe';
 
 const App = () => {
   const [loadingUser, setLoadingUser] = useState(true);
@@ -56,6 +57,7 @@ const App = () => {
         Welcome {isAnonymous ? 'Anonymous' : currentUser.displayName}
       </Text>
       <AppInfo />
+      <TicTacToe />
 
       {!isAnonymous && <UserInfo userInfo={userInfo} />}
 
@@ -73,7 +75,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-
     justifyContent: 'center',
     color: 'blue',
   },
