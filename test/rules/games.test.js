@@ -25,7 +25,7 @@ describe('Games tests', () => {
     await firebase.assertSucceeds(testDoc.get());
   });
 
-  it('should fail to Write games with auth', async () => {
+  it('should fail to Write games, even with auth', async () => {
     const db = firebase
       .initializeTestApp({
         projectId: MY_PROJECT_ID,

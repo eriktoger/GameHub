@@ -20,12 +20,12 @@ describe('Users tests', () => {
     await firebase.assertFails(testDoc.set({foo: 'bar'}));
   });
 
-  it('should succed to Read user with auth and correct uid', async () => {
+  it('should succeed to Read user with auth and correct uid', async () => {
     const testDoc = db.collection('users').doc('correct-uid');
     await firebase.assertSucceeds(testDoc.get());
   });
 
-  it('should succed to Write user with auth and correct uid', async () => {
+  it('should succeed to Write user with auth and correct uid', async () => {
     const testDoc = db.collection('users').doc('correct-uid');
     await firebase.assertSucceeds(testDoc.set({foo: 'bar'}));
   });

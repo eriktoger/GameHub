@@ -1,9 +1,32 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {StyleSheet, Button, Text, View, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
-export const UserInfo = ({userInfo}) => {
+export const UserInfo = () => {
+  const [userInfo, setUserInfo] = useState({});
+
+  const getCurrentUser = async () => {
+    const user = auth().currentUser;
+    console.log('user', user);
+    if (user?.uid) {
+      try {
+        const {_data} = await firestore()
+          .collection('users')
+          .doc(user.uid)
+          .get();
+        setUserInfo({id: user.uid, data: _data});
+      } catch (error) {
+        console.log('Erro getting user info');
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   const {id, data = {}} = userInfo;
   const {control, handleSubmit} = useForm();
 

@@ -1,25 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import Login from './Login';
-import firestore from '@react-native-firebase/firestore';
-import {UserInfo} from './UserInfo';
-import AppInfo from './AppInfo';
-import TicTacToe from './TicTacToe';
+import Login from './Components/Login';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import HomeScreen from './Screens/HomeScreen';
+import GameScreen from './Screens/GameScreen';
+import InfoScreen from './Screens/InfoScreen';
+
+const Stack = createStackNavigator();
+export const UserContext = React.createContext(null);
 
 const App = () => {
   const [loadingUser, setLoadingUser] = useState(true);
   const [currentUser, setCurrentUser] = useState();
-  const [userInfo, setUserInfo] = useState({});
 
-  const getCurrentUser = async () => {
+  const getCurrentUser = () => {
     const user = auth().currentUser;
     setCurrentUser(user);
     setLoadingUser(false);
-    if (user?.uid) {
-      const {_data} = await firestore().collection('users').doc(user.uid).get();
-      setUserInfo({id: user.uid, data: _data});
-    }
   };
 
   useEffect(() => {
@@ -51,20 +50,15 @@ const App = () => {
 
   const isAnonymous = currentUser.isAnonymous;
   return (
-    <View style={styles.container}>
-      <Text style={styles.message}>
-        {' '}
-        Welcome {isAnonymous ? 'Anonymous' : currentUser.displayName}
-      </Text>
-      <AppInfo />
-      <TicTacToe />
-
-      {!isAnonymous && <UserInfo userInfo={userInfo} />}
-
-      <View style={styles.button}>
-        <Button color="red" title={'sign out'} onPress={onSignout} />
-      </View>
-    </View>
+    <NavigationContainer>
+      <UserContext.Provider value={currentUser}>
+        <Stack.Navigator initialRouteName={'Home'}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Game" component={GameScreen} />
+          <Stack.Screen name="Info" component={InfoScreen} />
+        </Stack.Navigator>
+      </UserContext.Provider>
+    </NavigationContainer>
   );
 };
 

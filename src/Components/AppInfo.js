@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import Login from './Login';
+import {StyleSheet, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {UserInfo} from './UserInfo';
 
 const AppInfo = () => {
   const [info, setInfo] = useState();

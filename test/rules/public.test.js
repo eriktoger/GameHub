@@ -14,7 +14,7 @@ describe('Public tests', () => {
     await firebase.assertFails(testDoc.get());
   });
 
-  it('should succed to Read public with auth', async () => {
+  it('should succeed to Read public with auth', async () => {
     const db = firebase
       .initializeTestApp({
         projectId: MY_PROJECT_ID,
