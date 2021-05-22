@@ -1159,6 +1159,11 @@
   resolved "https://artifactory.build.ingka.ikea.com:443/artifactory/api/npm/mhs-npm-release-virtual/@react-native-firebase/database/-/database-11.5.0.tgz#1f38635bd4b9cdd5a9d879bf4808300e725d64c4"
   integrity sha1-HzhjW9S5zdWp2Hm/SAgwDnJdZMQ=
 
+"@react-native-firebase/firestore@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-12.0.0.tgz#bf8794b72c45a8eea09cf27b7499a8d87fb3a815"
+  integrity sha512-Js+oz1hZG0DMPYV3wLIcAWTN0vmjv4ZRlFWoUXPyVFfF7QQapnb9T6iYZ7KPnAY0lITTX1yvtkxGSnY02vkq0Q==
+
 "@react-native-google-signin/google-signin@^6.0.0":
   version "6.0.0"
   resolved "https://artifactory.build.ingka.ikea.com:443/artifactory/api/npm/mhs-npm-release-virtual/@react-native-google-signin/google-signin/-/google-signin-6.0.0.tgz#115b666221169cbd6aabd6d9a622a7f48205ea2e"
@@ -5737,6 +5742,11 @@ react-devtools-core@^4.6.0:
   dependencies:
     shell-quote "^1.6.1"
     ws "^7"
+
+react-hook-form@^7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.6.2.tgz#1996c61617f521d1294e0c7cfa7c7062ba546fce"
+  integrity sha512-cEmRwl33UvOvY3kVzkDOGAmNpOT1O03LtE8O79WArA3trBxLKLwOqF7zkGuj3oEe6YuzuyoM45WWjBwKCKKUHA==
 
 "react-is@^16.12.0 || ^17.0.0", react-is@^17.0.1:
   version "17.0.2"
