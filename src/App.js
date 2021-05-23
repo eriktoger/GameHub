@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './Screens/HomeScreen';
 import GameScreen from './Screens/GameScreen';
 import InfoScreen from './Screens/InfoScreen';
+import TicTacToeScreen from './Screens/TicTacToeScreen';
 
 const Stack = createStackNavigator();
 export const UserContext = React.createContext(null);
@@ -56,6 +57,7 @@ const App = () => {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Game" component={GameScreen} />
           <Stack.Screen name="Info" component={InfoScreen} />
+          <Stack.Screen name="TicTacToe" component={TicTacToeScreen} />
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>

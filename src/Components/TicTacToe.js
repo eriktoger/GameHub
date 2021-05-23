@@ -1,48 +1,99 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import Login from './Login';
 import firestore from '@react-native-firebase/firestore';
-import {UserInfo} from './UserInfo';
+import auth from '@react-native-firebase/auth';
 
-const TicTacToe = () => {
+const TicTacToe = ({navigation}) => {
   const [games, setGames] = useState([]);
-  const getGames = async () => {
+
+  const getGames = () => {
     try {
-      console.log('start');
-      const activeGames = await firestore()
+      return firestore()
         .collection('games')
         .where('active', '==', true)
-        .get();
-      const gameIds = [];
-      for (const doc of activeGames.docs) {
-        console.log(doc.id, '=>', doc.data());
-        gameIds.push(doc.id);
-      }
-      setGames(gameIds);
+        .where('player2_name', '==', '')
+        .onSnapshot(snapshot => {
+          const games = snapshot?.docs?.map(doc => ({
+            id: doc.id,
+            playerName: doc.data().player1_name,
+          }));
+          setGames(games);
+        });
     } catch (error) {
-      console.log('Error on getting public/info');
+      console.log('Error getting games');
     }
   };
 
   useEffect(() => {
-    getGames();
+    const subscriber = getGames();
+    return () => subscriber();
   }, []);
+
+  const onNewGame = async () => {
+    try {
+      const {displayName, uid} = auth().currentUser;
+      const game = await firestore()
+        .collection('games')
+        .add({
+          player1_name: displayName ?? 'Anonymous',
+          player1_id: uid,
+          player2_name: '',
+          active: true,
+          turn: uid,
+          moves: [],
+        });
+
+      navigation.navigate('TicTacToe', {id: game.id});
+    } catch (error) {
+      console.log('Error creating new game');
+    }
+  };
+
+  const onJoinGame = async id => {
+    try {
+      const {displayName, uid} = auth().currentUser;
+      await firestore()
+        .collection('games')
+        .doc(id)
+        .update({
+          player2_name: displayName ?? 'Anonymous',
+          player2_id: uid,
+        });
+
+      navigation.navigate('TicTacToe', {id});
+    } catch (error) {
+      console.log('Error updating/joining game');
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>TicTacToe:</Text>
-      <Button title="New Game" />
+      <View style={styles.button}>
+        <Button title="New Game" onPress={onNewGame} />
+      </View>
+      <Text style={styles.title}>Open games:</Text>
+      {games.map((game, i) => (
+        <View key={i} style={styles.button}>
+          <Button
+            title={`Play against ${game.playerName}`}
+            onPress={() => onJoinGame(game.id)}
+          />
+        </View>
+      ))}
+      {!games.length && <Text style={styles.title}>No games avaiable</Text>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  button: {
+    width: 200,
+    alignSelf: 'center',
+    margin: 5,
+  },
   container: {
     marginHorizontal: 20,
-  },
-  input: {
-    marginBottom: 20,
   },
   title: {
     fontSize: 20,

@@ -13,9 +13,15 @@ const HomeScreen = ({navigation}) => {
       <Text style={styles.message}>
         Welcome {isAnonymous ? 'Anonymous' : currentUser.displayName}
       </Text>
-      <Button title="Info" onPress={() => navigation.navigate('Info')} />
-      <Button title="Games" onPress={() => navigation.navigate('Game')} />
-      <Button title="sign out" color="red" onPress={onSignout} />
+      <View style={styles.button}>
+        <Button title="Info" onPress={() => navigation.navigate('Info')} />
+      </View>
+      <View style={styles.button}>
+        <Button title="Games" onPress={() => navigation.navigate('Game')} />
+      </View>
+      <View style={styles.button}>
+        <Button title="sign out" color="red" onPress={onSignout} />
+      </View>
     </View>
   );
 };
@@ -24,6 +30,7 @@ const styles = StyleSheet.create({
   button: {
     width: 100,
     alignSelf: 'center',
+    margin: 5,
   },
   container: {
     flex: 1,

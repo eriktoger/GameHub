@@ -29,6 +29,9 @@ build/
 local.properties
 *.iml
 
+#debug logs
+*debug.log
+
 # node.js
 #
 node_modules/

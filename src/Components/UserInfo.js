@@ -9,7 +9,6 @@ export const UserInfo = () => {
 
   const getCurrentUser = async () => {
     const user = auth().currentUser;
-    console.log('user', user);
     if (user?.uid) {
       try {
         const {_data} = await firestore()
