@@ -18,9 +18,9 @@ Run the app
 
 - react-native start
 
-Run test
+Run rules test
 
-- cd rules test
+- cd test
 - firebase --only firestore emulators:exec "npm test"
 
 Deploy rules:
