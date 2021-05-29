@@ -11,14 +11,12 @@ export const UserInfo = () => {
     const user = auth().currentUser;
     if (user?.uid) {
       try {
-        const data = await firestore()
-          .collection('users')
-          .doc(user.uid)
-          .get()
-          .data();
+        const data = (
+          await firestore().collection('users').doc(user.uid).get()
+        ).data();
         setUserInfo({id: user.uid, data});
       } catch (error) {
-        console.log('Erro getting user info');
+        console.log('Error getting user info', error);
       }
     }
   };
