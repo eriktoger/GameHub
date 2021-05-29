@@ -11,11 +11,12 @@ export const UserInfo = () => {
     const user = auth().currentUser;
     if (user?.uid) {
       try {
-        const {_data} = await firestore()
+        const data = await firestore()
           .collection('users')
           .doc(user.uid)
-          .get();
-        setUserInfo({id: user.uid, data: _data});
+          .get()
+          .data();
+        setUserInfo({id: user.uid, data});
       } catch (error) {
         console.log('Erro getting user info');
       }
@@ -31,11 +32,15 @@ export const UserInfo = () => {
 
   const onSave = async formData => {
     const newData = {
-      nickname: formData.nickname ?? data.nickname,
-      favFood: formData.favFood ?? data.favFood,
-      favAnimal: formData.favAnimal ?? data.favAnimal,
+      nickname: formData.nickname ?? data.nickname ?? '',
+      favFood: formData.favFood ?? data.favFood ?? '',
+      favAnimal: formData.favAnimal ?? data.favAnimal ?? '',
     };
-    await firestore().collection('users').doc(id).set(newData);
+    try {
+      await firestore().collection('users').doc(id).update(newData);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
@@ -91,7 +96,7 @@ export const UserInfo = () => {
                 onBlur={onBlur}
                 onChangeText={value => onChange(value)}
                 value={value}
-                defaultValue={data.favAnimal}
+                defaultValue={data.favAnimal || ''}
                 placeholder=" Favorite Animal"
               />
             </View>

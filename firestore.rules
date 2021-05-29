@@ -1,17 +1,38 @@
 rules_version = '2';
 service cloud.firestore {
- match /databases/{database}/documents {
+  match /databases/{database}/documents {
 
-   match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+    match /users/{uid} {
+      function newUser() {
+        return request.resource.data.tictactoe_wins == 0 &&
+        request.resource.data.tictactoe_losses == 0 &&
+        !exists(/databases/$(database)/documents/users/$(uid));
+      }
+
+      function updateInfo() {
+        return request.resource.data.diff(resource.data).affectedKeys().
+        hasOnly(["nickname","favFood","favAnimal"]);
+      }
+
+      function updateResult()  {
+        return (request.resource.data.tictactoe_wins == resource.data.tictactoe_wins + 1 ||
+        request.resource.data.tictactoe_losses == resource.data.tictactoe_losses + 1 ) &&
+        !(request.resource.data.tictactoe_wins == resource.data.tictactoe_wins + 1 &&
+        request.resource.data.tictactoe_losses == resource.data.tictactoe_losses + 1) &&
+        exists(/databases/$(database)/documents/games/$(request.resource.data.game));
+      }
+
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write:if request.auth != null && request.auth.uid == uid &&
+      (newUser() || updateInfo() || updateResult());
     }
 
-   match /public/{file} {
+    match /public/{file} {
       allow read: if request.auth != null;
       allow write: if false;
     }
-    
-     match /games/{file} {
+
+    match /games/{game} {
       allow read: if request.auth != null;
       allow create: if request.auth != null &&
       request.resource.data.player2_name == "" &&
@@ -20,12 +41,11 @@ service cloud.firestore {
       allow update: if request.auth != null &&
       ((request.auth.uid == request.resource.data.player2_id && resource.data.player2_name == "") || 
       (request.resource.data.player1_id == resource.data.player1_id &&
-       request.resource.data.player1_name == resource.data.player1_name &&
-       request.resource.data.player2_id == resource.data.player2_id &&
-       request.resource.data.player2_name == resource.data.player2_name &&
-       request.auth.uid == resource.data.turn && 
-       request.resource.data.turn != resource.data.turn ));
+      request.resource.data.player1_name == resource.data.player1_name &&
+      request.resource.data.player2_id == resource.data.player2_id &&
+      request.resource.data.player2_name == resource.data.player2_name &&
+      request.auth.uid == resource.data.turn &&
+      request.resource.data.turn != resource.data.turn ));
     }
-
   }
 }

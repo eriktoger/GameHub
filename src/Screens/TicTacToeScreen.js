@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import app from '@react-native-firebase/app';
 import Grid from '../Components/TicTacToeGrid';
 import auth from '@react-native-firebase/auth';
 
@@ -35,7 +36,7 @@ const calcWinner = (rows, coloumns, winCondition, moveMap, setWinner) => {
 
         let leftDiagonalWin = true;
         for (let w = 1; w < winCondition; w++) {
-          if (player !== moveMap.get(`${r - w}-${c - w}`)) {
+          if (player !== moveMap.get(`${r + w}-${c - w}`)) {
             leftDiagonalWin = false;
             break;
           }
@@ -96,6 +97,22 @@ const TicTacToeScreen = ({route}) => {
   const coloumns = [0, 1, 2];
   if (!winner) {
     calcWinner(rows, coloumns, winCondition, moveMap, setWinner);
+  } else if (!currentUser.isAnonymous) {
+    const increment = app.firestore.FieldValue.increment(1);
+    const change =
+      winner === currentUser.uid
+        ? {
+            tictactoe_wins: increment,
+          }
+        : {
+            tictactoe_losses: increment,
+          };
+    change['game'] = id;
+    try {
+      firestore().collection('users').doc(currentUser.uid).update(change);
+    } catch (error) {
+      console.log('Error on updating users');
+    }
   }
 
   const yourTurn = gameData.turn === currentUser.uid;

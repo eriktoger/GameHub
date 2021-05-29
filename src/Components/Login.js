@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableHighlight, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -15,9 +16,24 @@ GoogleSignin.configure({
 const Login = () => {
   const onGoogleButtonPress = async () => {
     try {
-      const user = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(user.idToken);
-      auth().signInWithCredential(googleCredential);
+      const {idToken} = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      await auth().signInWithCredential(googleCredential);
+
+      const user = auth().currentUser;
+      if (user && !user.isAnonymous) {
+        const {exists} = await firestore()
+          .collection('users')
+          .doc(user.uid)
+          .get();
+        if (!exists) {
+          const baseScore = {
+            tictactoe_wins: 0,
+            tictactoe_losses: 0,
+          };
+          await firestore().collection('users').doc(user.uid).set(baseScore);
+        }
+      }
     } catch (e) {
       console.log('error', e);
     }
