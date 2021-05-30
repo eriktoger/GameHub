@@ -42,12 +42,6 @@ const App = () => {
     return subscriber;
   }, []);
 
-  const onSignout = async () => {
-    await auth().signOut();
-
-    setCurrentUser(null);
-  };
-
   useEffect(() => {
     getCurrentUser();
   }, []);
@@ -61,10 +55,15 @@ const App = () => {
   }
 
   if (!currentUser) {
-    return <Login setCurrentUser={setCurrentUser} />;
+    return (
+      <ThemeProvider theme={theme}>
+        <ToastProvider>
+          <Login setCurrentUser={setCurrentUser} />
+        </ToastProvider>
+      </ThemeProvider>
+    );
   }
 
-  const isAnonymous = currentUser.isAnonymous;
   return (
     <ThemeProvider theme={theme}>
       <ToastProvider>

@@ -4,9 +4,6 @@ import auth from '@react-native-firebase/auth';
 
 const HomeScreen = ({navigation}) => {
   const currentUser = auth().currentUser;
-  const onSignout = async () => {
-    await auth().signOut();
-  };
   const isAnonymous = currentUser.isAnonymous;
   return (
     <View style={styles.container}>
@@ -20,7 +17,11 @@ const HomeScreen = ({navigation}) => {
         <Button title="Games" onPress={() => navigation.navigate('Game')} />
       </View>
       <View style={styles.button}>
-        <Button title="sign out" color="red" onPress={onSignout} />
+        <Button
+          title="sign out"
+          color="red"
+          onPress={async () => await auth().signOut()}
+        />
       </View>
     </View>
   );

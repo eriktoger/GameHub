@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
-import {StyleSheet, Button, Text, View, TextInput, Alert} from 'react-native';
+import {StyleSheet, Button, Text, View, TextInput} from 'react-native';
 import {getUserInfo, updateUserInfo} from '../Services/userService';
 import {useToast} from 'react-native-styled-toast';
 
