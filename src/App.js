@@ -55,30 +55,20 @@ const App = () => {
   }
 
   if (!currentUser) {
-    return (
-      <ThemeProvider theme={theme}>
-        <ToastProvider>
-          <Login setCurrentUser={setCurrentUser} />
-        </ToastProvider>
-      </ThemeProvider>
-    );
+    return <Login setCurrentUser={setCurrentUser} />;
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <ToastProvider>
-        <NavigationContainer>
-          <UserContext.Provider value={currentUser}>
-            <Stack.Navigator initialRouteName={'Home'}>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Game" component={GameScreen} />
-              <Stack.Screen name="Info" component={InfoScreen} />
-              <Stack.Screen name="TicTacToe" component={TicTacToeScreen} />
-            </Stack.Navigator>
-          </UserContext.Provider>
-        </NavigationContainer>
-      </ToastProvider>
-    </ThemeProvider>
+    <NavigationContainer>
+      <UserContext.Provider value={currentUser}>
+        <Stack.Navigator initialRouteName={'Home'}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Game" component={GameScreen} />
+          <Stack.Screen name="Info" component={InfoScreen} />
+          <Stack.Screen name="TicTacToe" component={TicTacToeScreen} />
+        </Stack.Navigator>
+      </UserContext.Provider>
+    </NavigationContainer>
   );
 };
 
@@ -99,4 +89,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+const Root = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </ThemeProvider>
+  );
+};
+
+export default Root;
