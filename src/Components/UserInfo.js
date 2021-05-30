@@ -1,23 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
-import {StyleSheet, Button, Text, View, TextInput} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import {StyleSheet, Button, Text, View, TextInput, Alert} from 'react-native';
+import {getUserInfo, updateUserInfo} from '../Services/userService';
+import {useToast} from 'react-native-styled-toast';
 
-export const UserInfo = () => {
+export const UserInfo = ({userId}) => {
   const [userInfo, setUserInfo] = useState({});
+  const {toast} = useToast();
 
   const getCurrentUser = async () => {
-    const user = auth().currentUser;
-    if (user?.uid) {
-      try {
-        const data = (
-          await firestore().collection('users').doc(user.uid).get()
-        ).data();
-        setUserInfo({id: user.uid, data});
-      } catch (error) {
-        console.log('Error getting user info', error);
-      }
+    const data = await getUserInfo(userId, toast);
+    if (data) {
+      setUserInfo({id: userId, data});
     }
   };
 
@@ -34,11 +28,7 @@ export const UserInfo = () => {
       favFood: formData.favFood ?? data.favFood ?? '',
       favAnimal: formData.favAnimal ?? data.favAnimal ?? '',
     };
-    try {
-      await firestore().collection('users').doc(id).update(newData);
-    } catch (error) {
-      console.log('error', error);
-    }
+    await updateUserInfo(id, newData, toast);
   };
 
   return (

@@ -27,6 +27,11 @@ Deploy rules:
 
 - firebase deploy --only firestore:rules
 
+Entypo icons for toaster:
+
+- https://icongr.am/entypo
+- It is possible to change icon-family
+
 Visual studio plugins:
 
 - https://marketplace.visualstudio.com/items?itemName=ChFlick.firecode

@@ -11,7 +11,7 @@ const InfoScreen = () => {
     <View style={styles.container}>
       <AppInfo />
 
-      {!isAnonymous && <UserInfo />}
+      {!isAnonymous && <UserInfo userId={currentUser.uid} />}
     </View>
   );
 };
