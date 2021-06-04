@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, TouchableHighlight} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import {StyleSheet, View, TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useToast} from 'react-native-styled-toast';
+import {makeAMove} from '../Services/ticTacToeService';
 
 const TicTacToeGrid = ({
   gameData,
@@ -12,24 +13,7 @@ const TicTacToeGrid = ({
   moveMap,
   finished,
 }) => {
-  const onPress = async (row, coloumn) => {
-    try {
-      const {moves, turn} = gameData;
-      moves.push({row, coloumn, player: turn});
-      await firestore()
-        .collection('games')
-        .doc(gameId)
-        .update({
-          moves,
-          turn:
-            turn === gameData.player1_id
-              ? gameData.player2_id
-              : gameData.player1_id,
-        });
-    } catch (error) {
-      console.log('Error playing a move');
-    }
-  };
+  const {toast} = useToast();
 
   return (
     <View style={styles.container}>
@@ -40,11 +24,11 @@ const TicTacToeGrid = ({
               key={coloumn}
               disabled={
                 !yourTurn ||
-                gameData.player2_name == '' ||
+                gameData.player2_name === '' ||
                 moveMap.get(`${row}-${coloumn}`) ||
                 finished
               }
-              onPress={() => onPress(row, coloumn)}>
+              onPress={() => makeAMove(row, coloumn, gameData, gameId, toast)}>
               <View style={styles.square}>
                 {moveMap.get(`${row}-${coloumn}`) === gameData.player1_id && (
                   <Icon size={40} name="circle-o" color="blue" />

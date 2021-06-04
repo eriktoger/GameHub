@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import app from '@react-native-firebase/app';
 import Grid from '../Components/TicTacToeGrid';
 import auth from '@react-native-firebase/auth';
+import {useToast} from 'react-native-styled-toast';
+import {updateScore} from '../Services/userService';
+import {getGameData} from '../Services/ticTacToeService';
 
 const calcWinner = (rows, coloumns, winCondition, moveMap, setWinner) => {
   for (let r = 0; r < rows.length; r++) {
@@ -59,25 +60,13 @@ const TicTacToeScreen = ({route}) => {
   const {id} = route.params ?? {};
   const [gameData, setGameData] = useState();
   const [winner, setWinner] = useState();
+  const {toast} = useToast();
   const currentUser = auth().currentUser;
 
-  const getGameData = () => {
-    try {
-      return firestore()
-        .collection('games')
-        .doc(id)
-        .onSnapshot(async snapshot => {
-          setGameData(snapshot.data());
-        });
-    } catch (error) {
-      console.log('Error on getting public/info');
-    }
-  };
-
   useEffect(() => {
-    const subscriber = getGameData();
+    const subscriber = getGameData(id, setGameData, toast);
     return () => subscriber();
-  }, []);
+  }, [id, toast]);
 
   if (!gameData) {
     return (
@@ -98,21 +87,7 @@ const TicTacToeScreen = ({route}) => {
   if (!winner) {
     calcWinner(rows, coloumns, winCondition, moveMap, setWinner);
   } else if (!currentUser.isAnonymous) {
-    const increment = app.firestore.FieldValue.increment(1);
-    const change =
-      winner === currentUser.uid
-        ? {
-            tictactoe_wins: increment,
-          }
-        : {
-            tictactoe_losses: increment,
-          };
-    change['game'] = id;
-    try {
-      firestore().collection('users').doc(currentUser.uid).update(change);
-    } catch (error) {
-      console.log('Error on updating users');
-    }
+    updateScore(winner, id, toast);
   }
 
   const yourTurn = gameData.turn === currentUser.uid;
@@ -131,7 +106,8 @@ const TicTacToeScreen = ({route}) => {
         finished={!!winner}
         rows={rows}
         coloumns={coloumns}
-        moveMap={moveMap}></Grid>
+        moveMap={moveMap}
+      />
       <Text style={styles.title}>
         {winner === gameData.player1_id && `${gameData.player1_name} won!`}
       </Text>
