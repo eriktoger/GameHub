@@ -40,7 +40,7 @@ export const googleLogin = async toast => {
 
 export const anonymousLogin = async toast => {
   try {
-    auth().signInAnonymously();
+    await auth().signInAnonymously();
   } catch (e) {
     toast({...errorToast, message: 'Error login in user'});
   }

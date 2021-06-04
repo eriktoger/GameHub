@@ -1,5 +1,11 @@
-import React from 'react';
-import {StyleSheet, View, TouchableHighlight, Text} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableHighlight,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUser} from '@fortawesome/free-solid-svg-icons';
@@ -8,15 +14,34 @@ import {googleLogin, anonymousLogin} from '../Services/loginService';
 
 const Login = () => {
   const {toast} = useToast();
+  const [load, setLoad] = useState(false);
+
+  if (load) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+  const onPress = async loginMethod => {
+    setLoad(true);
+    await loginMethod(toast);
+    setLoad(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <GoogleSigninButton onPress={async () => await googleLogin(toast)} />
+        <GoogleSigninButton
+          onPress={() => onPress(googleLogin)}
+          disabled={load}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableHighlight
           activeOpacity={0.8}
-          onPress={async () => await anonymousLogin(toast)}>
+          onPress={() => onPress(anonymousLogin)}
+          disabled={load}>
           <View style={styles.anonymousContainer}>
             <FontAwesomeIcon
               icon={faUser}
@@ -47,7 +72,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'blue',
   },
 });
 
