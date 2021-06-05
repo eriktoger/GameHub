@@ -3,34 +3,32 @@ import {StyleSheet, View} from 'react-native';
 import {UserInfo} from '../Components/UserInfo';
 import AppInfo from '../Components/AppInfo';
 import auth from '@react-native-firebase/auth';
-
+import useOrientation from '../hooks/useOrientation';
 const InfoScreen = () => {
   const currentUser = auth().currentUser;
   const isAnonymous = currentUser.isAnonymous;
+  const orientation = useOrientation();
+  const flexDirection = orientation === 'LANDSCAPE' ? 'row' : 'column';
   return (
-    <View style={styles.container}>
-      <AppInfo />
+    <View style={styles({flexDirection}).container}>
+      <AppInfo orientation={orientation} />
 
-      {!isAnonymous && <UserInfo userId={currentUser.uid} />}
+      {!isAnonymous && (
+        <UserInfo userId={currentUser.uid} orientation={orientation} />
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    width: 100,
-    alignSelf: 'center',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    color: 'blue',
-  },
-  message: {
-    alignSelf: 'center',
-    margin: 10,
-    fontSize: 24,
-  },
-});
+const styles = ({flexDirection}) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: flexDirection,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#71c5f0',
+    },
+  });
 
 export default InfoScreen;

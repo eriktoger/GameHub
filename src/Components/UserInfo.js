@@ -4,20 +4,37 @@ import {StyleSheet, Button, Text, View, TextInput} from 'react-native';
 import {getUserInfo, updateUserInfo} from '../Services/userService';
 import {useToast} from 'react-native-styled-toast';
 
-export const UserInfo = ({userId}) => {
+const onRender = (field, defaultValue, text, placeholder) => {
+  const {onChange, onBlur, value} = field;
+  return (
+    <View style={styles().input}>
+      <Text style={styles().formText}>{text} </Text>
+      <TextInput
+        style={(styles().formText, styles().formInput)}
+        onBlur={onBlur}
+        onChangeText={val => onChange(val)}
+        value={value}
+        defaultValue={defaultValue}
+        placeholder={placeholder}
+      />
+    </View>
+  );
+};
+
+export const UserInfo = ({userId, orientation}) => {
   const [userInfo, setUserInfo] = useState({});
   const {toast} = useToast();
-
-  const getCurrentUser = async () => {
-    const data = await getUserInfo(userId, toast);
-    if (data) {
-      setUserInfo({id: userId, data});
-    }
-  };
-
+  const width = orientation === 'LANDSCAPE' ? '40%' : '80%';
   useEffect(() => {
+    const getCurrentUser = async () => {
+      const data = await getUserInfo(userId, toast);
+      if (data) {
+        setUserInfo({id: userId, data});
+      }
+    };
     getCurrentUser();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const {id, data = {}} = userInfo;
   const {control, handleSubmit} = useForm();
@@ -32,98 +49,71 @@ export const UserInfo = ({userId}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>User Info</Text>
+    <View style={styles({width}).container}>
+      <Text style={styles().title}>User Info</Text>
+
       <Controller
         control={control}
-        render={({field: {onChange, onBlur, value}}) => {
-          return (
-            <View style={styles.input}>
-              <Text style={styles.formText}>Nickname: </Text>
-              <TextInput
-                style={(styles.formText, styles.formInput)}
-                onBlur={onBlur}
-                onChangeText={value => onChange(value)}
-                value={value}
-                defaultValue={data.nickname}
-                placeholder=" nickname"
-              />
-            </View>
-          );
-        }}
+        render={({field}) =>
+          onRender(field, data.nickname, 'Nickname: ', ' Nnickname')
+        }
         name="nickname"
       />
       <Controller
         control={control}
-        render={({field: {onChange, onBlur, value}}) => {
-          return (
-            <View style={styles.input}>
-              <Text style={styles.formText}>Favorite food: </Text>
-              <TextInput
-                style={(styles.formText, styles.formInput)}
-                onBlur={onBlur}
-                onChangeText={value => onChange(value)}
-                value={value}
-                defaultValue={data.favFood}
-                placeholder=" Favorite Food"
-              />
-            </View>
-          );
-        }}
+        render={({field}) =>
+          onRender(field, data.favFood, 'Favorite food: ', ' Favorite Food')
+        }
         name="favFood"
       />
-
       <Controller
         control={control}
-        render={({field: {onChange, onBlur, value}}) => {
-          return (
-            <View style={styles.input}>
-              <Text style={styles.formText}>Favorie animal: </Text>
-              <TextInput
-                style={(styles.formText, styles.formInput)}
-                onBlur={onBlur}
-                onChangeText={value => onChange(value)}
-                value={value}
-                defaultValue={data.favAnimal || ''}
-                placeholder=" Favorite Animal"
-              />
-            </View>
-          );
-        }}
+        render={({field}) =>
+          onRender(
+            field,
+            data.favAnimal,
+            'Favorite Animal: ',
+            ' Favorite Animal',
+          )
+        }
         name="favAnimal"
       />
-      <View style={styles.button}>
+      <View style={styles().button}>
         <Button title="Save info" onPress={handleSubmit(onSave)} />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    marginBottom: 10,
-    width: 100,
-    alignSelf: 'center',
-  },
-  container: {
-    marginHorizontal: 20,
-  },
-  formText: {
-    width: 100,
-  },
-  formInput: {
-    width: 200,
-    borderWidth: 1,
-  },
-  input: {
-    flexDirection: 'row',
-    //alignSelf: 'baseline',
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
-    marginBottom: 10,
-    //alignSelf: 'baseline',
-  },
-});
+const styles = ({width} = {}) =>
+  StyleSheet.create({
+    button: {
+      marginBottom: 10,
+      alignSelf: 'center',
+    },
+    container: {
+      marginHorizontal: 20,
+      backgroundColor: 'white',
+      paddingLeft: 10,
+      paddingRight: 10,
+      borderRadius: 10,
+      width: width,
+    },
+    formText: {
+      width: 100,
+    },
+    formInput: {
+      width: '60%',
+      borderWidth: 1,
+    },
+    input: {
+      flexDirection: 'row',
+      marginBottom: 10,
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 20,
+      marginBottom: 10,
+      marginTop: 10,
+    },
+  });

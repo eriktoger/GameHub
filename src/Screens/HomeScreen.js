@@ -9,7 +9,7 @@ const HomeScreen = ({navigation}) => {
       <CustomButton
         text={'Info'}
         icon={'info'}
-        onPress={() => navigation.navigate('Game')}
+        onPress={() => navigation.navigate('Info')}
       />
       <CustomButton
         text={'Games'}
