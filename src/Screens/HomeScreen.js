@@ -1,47 +1,36 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {CustomButton} from '../Components/CustomButtom';
 
 const HomeScreen = ({navigation}) => {
-  const currentUser = auth().currentUser;
-  const isAnonymous = currentUser.isAnonymous;
   return (
     <View style={styles.container}>
-      <Text style={styles.message}>
-        Welcome {isAnonymous ? 'Anonymous' : currentUser.displayName}
-      </Text>
-      <View style={styles.button}>
-        <Button title="Info" onPress={() => navigation.navigate('Info')} />
-      </View>
-      <View style={styles.button}>
-        <Button title="Games" onPress={() => navigation.navigate('Game')} />
-      </View>
-      <View style={styles.button}>
-        <Button
-          title="sign out"
-          color="red"
-          onPress={async () => await auth().signOut()}
-        />
-      </View>
+      <CustomButton
+        text={'Info'}
+        icon={'info'}
+        onPress={() => navigation.navigate('Game')}
+      />
+      <CustomButton
+        text={'Games'}
+        icon={'gamepad'}
+        onPress={() => navigation.navigate('Game')}
+      />
+      <CustomButton
+        text={'Sign out'}
+        icon={'sign-out'}
+        onPress={async () => await auth().signOut()}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    width: 100,
-    alignSelf: 'center',
-    margin: 5,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    color: 'blue',
-  },
-  message: {
-    alignSelf: 'center',
-    margin: 10,
-    fontSize: 24,
+    alignItems: 'center',
+    backgroundColor: '#71c5f0',
   },
 });
 

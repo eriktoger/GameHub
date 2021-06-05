@@ -3,22 +3,11 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
-  Image,
   ImageBackground,
 } from 'react-native';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUser} from '@fortawesome/free-solid-svg-icons';
 import {useToast} from 'react-native-styled-toast';
 import {googleLogin, anonymousLogin} from '../Services/loginService';
-import {LoginButton} from './LoginButton';
-
-const AnonymousIcon = () => (
-  <FontAwesomeIcon style={styles.anonymousButton} icon={faUser} size={20} />
-);
-
-const GoogleIcon = () => (
-  <Image style={styles.icon} source={require('../images/google2.png')} />
-);
+import {CustomButton} from './CustomButtom';
 
 const Login = () => {
   const {toast} = useToast();
@@ -45,17 +34,17 @@ const Login = () => {
         source={require('../images/games.jpg')}
         style={styles.backgroundImage}
         imageStyle={imageStyles.background}>
-        <LoginButton
+        <CustomButton
           text={'Google Sign in'}
           load={load}
           onPress={() => onPress(googleLogin)}
-          Icon={GoogleIcon}
+          icon={'google'}
         />
-        <LoginButton
+        <CustomButton
           text={'Anonymous Sign in'}
           load={load}
           onPress={() => onPress(anonymousLogin)}
-          Icon={AnonymousIcon}
+          icon={'user'}
         />
       </ImageBackground>
     </View>
