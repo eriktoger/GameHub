@@ -33,15 +33,19 @@ export const googleLogin = async toast => {
     if (user && !user.isAnonymous) {
       await registerNewUser(user.uid, toast);
     }
+    return true;
   } catch (error) {
     toast({...errorToast, message: 'Error login in user'});
+    return false;
   }
 };
 
 export const anonymousLogin = async toast => {
   try {
     await auth().signInAnonymously();
+    return true;
   } catch (e) {
     toast({...errorToast, message: 'Error login in user'});
+    return false;
   }
 };
