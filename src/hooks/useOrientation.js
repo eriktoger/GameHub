@@ -1,28 +1,10 @@
-import {useEffect, useState} from 'react';
-import {Dimensions} from 'react-native';
-
-const isPortrait = () => {
-  const dim = Dimensions.get('screen');
-  return dim.height >= dim.width;
-};
+import {useWindowDimensions} from 'react-native';
 
 const useOrientation = () => {
-  const [orientation, setOrientation] = useState(
-    isPortrait() ? 'PORTRAIT' : 'LANDSCAPE',
-  );
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
 
-  useEffect(() => {
-    const callback = () =>
-      setOrientation(isPortrait() ? 'PORTRAIT' : 'LANDSCAPE');
-
-    Dimensions.addEventListener('change', callback);
-
-    return () => {
-      Dimensions.removeEventListener('change', callback);
-    };
-  }, []);
-
-  return orientation;
+  return windowWidth < windowHeight ? 'PORTRAIT' : 'LANDSCAPE';
 };
 
 export default useOrientation;

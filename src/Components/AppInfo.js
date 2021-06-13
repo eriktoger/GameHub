@@ -6,7 +6,7 @@ import {useToast} from 'react-native-styled-toast';
 const AppInfo = ({orientation}) => {
   const [info, setInfo] = useState();
   const {toast} = useToast();
-  const width = orientation === 'LANDSCAPE' ? '40%' : '80%';
+  const flex = orientation === 'LANDSCAPE' ? 1 : 0;
   useEffect(() => {
     const fetchData = async () => {
       const text = await getAppInfo(toast);
@@ -17,22 +17,21 @@ const AppInfo = ({orientation}) => {
   }, []);
 
   return (
-    <View style={styles({width}).container}>
+    <View style={styles({flex}).container}>
       <Text style={styles().title}>App info:</Text>
       <Text style={styles().input}>{info}</Text>
     </View>
   );
 };
 
-const styles = ({width} = {}) =>
+const styles = ({flex} = {}) =>
   StyleSheet.create({
     container: {
-      marginHorizontal: 20,
       backgroundColor: 'white',
-      padding: 10,
-      marginBottom: 20,
       borderRadius: 10,
-      width: width,
+      margin: 20,
+      padding: 10,
+      flex,
     },
     input: {
       marginBottom: 20,

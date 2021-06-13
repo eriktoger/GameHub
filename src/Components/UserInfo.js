@@ -24,7 +24,7 @@ const onRender = (field, defaultValue, text, placeholder) => {
 export const UserInfo = ({userId, orientation}) => {
   const [userInfo, setUserInfo] = useState({});
   const {toast} = useToast();
-  const width = orientation === 'LANDSCAPE' ? '40%' : '80%';
+  const flex = orientation === 'LANDSCAPE' ? 1 : 0;
   useEffect(() => {
     const getCurrentUser = async () => {
       const data = await getUserInfo(userId, toast);
@@ -49,13 +49,13 @@ export const UserInfo = ({userId, orientation}) => {
   };
 
   return (
-    <View style={styles({width}).container}>
+    <View style={styles({flex}).container}>
       <Text style={styles().title}>User Info</Text>
 
       <Controller
         control={control}
         render={({field}) =>
-          onRender(field, data.nickname, 'Nickname: ', ' Nnickname')
+          onRender(field, data.nickname, 'Nickname: ', ' Nickname')
         }
         name="nickname"
       />
@@ -85,19 +85,18 @@ export const UserInfo = ({userId, orientation}) => {
   );
 };
 
-const styles = ({width} = {}) =>
+const styles = ({flex} = {}) =>
   StyleSheet.create({
     button: {
       marginBottom: 10,
       alignSelf: 'center',
     },
     container: {
-      marginHorizontal: 20,
       backgroundColor: 'white',
-      paddingLeft: 10,
-      paddingRight: 10,
       borderRadius: 10,
-      width: width,
+      margin: 20,
+      padding: 10,
+      flex,
     },
     formText: {
       width: 100,
