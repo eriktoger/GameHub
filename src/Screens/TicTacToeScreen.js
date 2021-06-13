@@ -91,14 +91,15 @@ const TicTacToeScreen = ({route}) => {
   }
 
   const yourTurn = gameData.turn === currentUser.uid;
+  const turnMessage =
+    gameData.player2_name === ''
+      ? 'Waiting for an oponent'
+      : yourTurn
+      ? ' It is your turn'
+      : 'It is the oppenents turn';
   return (
     <View>
-      <Text style={styles.title}>
-        It is {yourTurn ? 'your turn' : 'the oppenents turn'}
-      </Text>
-      <Text style={styles.title}>
-        {gameData.player2_name === '' && 'Waiting for an oponent'}
-      </Text>
+      <Text style={styles.title}>{turnMessage}</Text>
       <Grid
         gameData={gameData}
         yourTurn={yourTurn}
