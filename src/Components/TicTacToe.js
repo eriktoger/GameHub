@@ -81,7 +81,7 @@ const TicTacToe = ({navigation}) => {
           />
         </View>
       ))}
-      {!games.length && <Text style={styles.title}>No games avaiable</Text>}
+      {!games.length && <Text style={styles.text}>No games avaiable</Text>}
     </View>
   );
 };
@@ -93,7 +93,13 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   container: {
-    marginHorizontal: 20,
+    margin: 20,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  text: {
+    fontSize: 16,
   },
   title: {
     fontSize: 20,

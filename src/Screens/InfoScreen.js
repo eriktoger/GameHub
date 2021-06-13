@@ -9,10 +9,10 @@ const InfoScreen = () => {
   const isAnonymous = currentUser.isAnonymous;
   const orientation = useOrientation();
   const flexDirection = orientation === 'LANDSCAPE' ? 'row' : 'column';
+
   return (
     <View style={styles({flexDirection}).container}>
       <AppInfo orientation={orientation} />
-
       {!isAnonymous && (
         <UserInfo userId={currentUser.uid} orientation={orientation} />
       )}
